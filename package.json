@@ -1,0 +1,12 @@
+{
+  "name": "l1f3-gam3",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm dev:frontend\" \"pnpm dev:backend\"",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

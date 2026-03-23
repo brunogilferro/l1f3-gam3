@@ -1,0 +1,107 @@
+---
+description: Accessibility rules for all frontend components and pages
+globs: ["apps/frontend/**/*.tsx"]
+alwaysApply: false
+---
+
+# Accessibility Rules
+
+Every UI component must meet basic accessibility standards.
+Accessibility is not optional — it is part of the definition of done.
+
+## Forms
+
+- Every input MUST have a `<label>` with `htmlFor` matching the input `id`
+- Use shadcn `<Label>` component (never raw `<label>` without it)
+- Error messages MUST be linked via `aria-describedby`
+- Required fields MUST have `aria-required="true"` or `required` attribute
+- Disabled fields MUST have `disabled` attribute (not just visual styling)
+
+```tsx
+// Correct
+<div>
+  <Label htmlFor="email">Email</Label>
+  <Input
+    id="email"
+    type="email"
+    aria-describedby={error ? "email-error" : undefined}
+    aria-required="true"
+  />
+  {error && <p id="email-error" className="text-destructive text-sm mt-1">{error}</p>}
+</div>
+```
+
+## Buttons and Interactive Elements
+
+- Every `<button>` MUST have visible text OR `aria-label` if icon-only
+- `IconButton` (icon-only) MUST always have `aria-label`
+- Links that open in a new tab MUST have `aria-label` or `target="_blank"` with visible indicator
+- Buttons that trigger async actions MUST have `aria-busy` and `disabled` during loading
+
+```tsx
+// Icon-only button
+<Button variant="ghost" size="icon" aria-label="Delete item">
+  <Trash2 size={16} />
+</Button>
+
+// Loading state
+<Button disabled={isLoading} aria-busy={isLoading}>
+  {isLoading ? 'Saving...' : 'Save'}
+</Button>
+```
+
+## Images
+
+- Every `<Image>` MUST have a descriptive `alt` attribute
+- Decorative images MUST have `alt=""`
+- Never omit `alt` — TypeScript will catch it, but be intentional
+
+## Navigation and Landmarks
+
+- Pages MUST have a `<main>` element wrapping the primary content
+- Use semantic HTML: `<nav>`, `<header>`, `<footer>`, `<section>`, `<article>` where appropriate
+- Never use `<div>` or `<span>` for elements that have semantic equivalents
+
+## Focus Management
+
+- All interactive elements MUST be keyboard-accessible (reachable via Tab)
+- Use `focus-visible:` Tailwind variants, never remove focus outlines entirely
+- Modals and dialogs MUST trap focus when open (shadcn Dialog handles this)
+- After closing a modal, focus MUST return to the trigger element
+
+```tsx
+// Never do this
+className="outline-none"  // removes all focus indicators
+
+// Do this instead
+className="focus-visible:ring-2 focus-visible:ring-accent-primary"
+```
+
+## Color and Contrast
+
+- Never convey information with color alone (use icons or text too)
+- Error states must show both a color change AND an icon or text
+- Don't rely solely on `text-text-secondary` for important content — it may fail contrast
+
+## ARIA
+
+- Use `role` only when semantic HTML is not enough
+- Common roles: `role="alert"` for dynamic error messages, `role="status"` for live updates
+- `aria-live="polite"` for non-critical updates, `aria-live="assertive"` for errors
+
+```tsx
+// Dynamic error that appears after action
+<p role="alert" aria-live="assertive" className="text-destructive">
+  {errorMessage}
+</p>
+```
+
+## Checklist before finishing any component
+
+- [ ] All inputs have visible labels
+- [ ] All interactive elements are keyboard accessible
+- [ ] Icon-only buttons have `aria-label`
+- [ ] Images have meaningful `alt` text
+- [ ] Error messages are programmatically associated (`aria-describedby`)
+- [ ] Loading states disable buttons and set `aria-busy`
+- [ ] Focus rings are visible (never removed globally)

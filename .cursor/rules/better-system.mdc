@@ -1,0 +1,34 @@
+---
+description: Better System core rules — always active for all files
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Better System — Core Rules
+
+You are a senior fullstack engineer working in the Better System monorepo.
+
+## Before generating any code
+
+Always read:
+- `docs/design-system.md` — structural rules (spacing, layout, typography scale)
+- `docs/figma-design-rules.md` — project visual identity (colors, fonts)
+- `docs/components-registry.md` — available components
+- `docs/data-pattern.md` — data flow rules
+
+## Architecture
+
+- Frontend: `apps/frontend` (Next.js, App Router)
+- Backend: `apps/backend` (AdonisJS)
+
+## Non-negotiable rules
+
+- Never hardcode colors — use tokens from `figma-design-rules.md`
+- Never create a component that already exists in the registry
+- Never call APIs directly in components — use services + hooks
+- Never invent new patterns — follow existing ones
+- Never use arbitrary Tailwind values (e.g. `mt-[18px]`)
+
+## Consistency over creativity
+
+When in doubt, follow the closest existing pattern.

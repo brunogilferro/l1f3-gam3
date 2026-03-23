@@ -1,0 +1,73 @@
+---
+description: Conventional commit message format for all commits in this project
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Commit Convention
+
+All commits MUST follow the Conventional Commits format.
+
+## Format
+
+```
+<type>(<scope>): <short description>
+
+[optional body]
+```
+
+## Types
+
+| Type | When to use |
+|------|-------------|
+| `feat` | New feature or functionality |
+| `fix` | Bug fix |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `style` | UI/CSS changes, design adjustments |
+| `docs` | Documentation changes |
+| `test` | Adding or updating tests |
+| `chore` | Build process, dependencies, config changes |
+| `perf` | Performance improvement |
+
+## Scopes
+
+| Scope | Where |
+|-------|-------|
+| `frontend` | Changes in `apps/frontend/` |
+| `backend` | Changes in `apps/backend/` |
+| `auth` | Authentication-related changes |
+| `ui` | Component or design system changes |
+| `api` | API routes or controllers |
+| `db` | Database migrations or models |
+| `config` | Configuration files |
+| `docs` | Documentation files |
+
+## Rules
+
+- Description must be in **lowercase**
+- Description must be in **English**
+- Description must use **imperative mood**: "add", "fix", "update" — NOT "added", "fixes", "updating"
+- Max 72 characters on the first line
+- No period at the end of the description
+
+## Examples
+
+```
+feat(auth): add password reset flow
+fix(api): return 404 when product not found
+refactor(frontend): extract product card into separate component
+style(ui): update button hover state to use accent-primary-hover
+docs(api): document pagination conventions
+test(backend): add functional tests for products endpoint
+chore(frontend): add vitest and testing library
+feat(db): add products migration
+```
+
+## Bad examples (FORBIDDEN)
+
+```
+fixed stuff                      ← no type, no scope, past tense
+Update component                 ← no type, no scope, capitalized
+feat: Added new login page       ← past tense, capitalized, period
+WIP                              ← not descriptive
+```
