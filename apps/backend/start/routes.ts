@@ -29,9 +29,10 @@ router
     router
       .group(() => {
         router.get('/profile', [controllers.Profile, 'show'])
+        router.get('/context', [controllers.MeContext, 'show'])
       })
       .prefix('account')
-      .as('profile')
+      .as('account')
       .use(middleware.auth())
   })
   .prefix('/api/v1')
