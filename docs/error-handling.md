@@ -126,11 +126,25 @@ export function parseApiError(error: unknown): string {
 
 ### Form validation errors (field-level)
 
-```ts
-// After a failed form submission
-if (error.errors) {
-  error.errors.forEach(({ field, message }) => {
-    form.setError(field, { message })
+All forms MUST use `react-hook-form` + `zod` + `@hookform/resolvers`.
+Always add `noValidate` to `<form>` to disable HTML5 native validation.
+
+```tsx
+// Schema
+const schema = z.object({ email: z.string().email('Email inválido') })
+
+// Form
+const { register, handleSubmit, formState: { errors }, setError } = useForm({
+  resolver: zodResolver(schema),
+})
+
+// Field error (below input)
+{errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+
+// After a failed API submission — set backend errors on fields
+if (apiError.errors) {
+  apiError.errors.forEach(({ field, message }) => {
+    setError(field, { message })
   })
 }
 ```
