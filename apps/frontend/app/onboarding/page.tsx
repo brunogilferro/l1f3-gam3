@@ -1,0 +1,23 @@
+'use client'
+
+import { useAuth } from '@/context/auth-context'
+import { useRouter } from 'next/navigation'
+
+export default function OnboardingPage() {
+  const { logout } = useAuth()
+  const router = useRouter()
+
+  function handleLogout() {
+    logout()
+    router.push('/login')
+  }
+
+  return (
+    <main className="flex flex-1 flex-col items-center justify-center min-h-screen bg-background text-foreground gap-4">
+      <p className="text-text-secondary text-sm">Onboarding — em breve.</p>
+      <button onClick={handleLogout} className="text-sm text-red-500 underline cursor-pointer">
+        Logout
+      </button>
+    </main>
+  )
+}

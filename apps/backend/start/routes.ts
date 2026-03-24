@@ -19,7 +19,6 @@ router
   .group(() => {
     router
       .group(() => {
-        router.post('signup', [controllers.NewAccount, 'store'])
         router.post('login', [controllers.AccessToken, 'store'])
         router.post('logout', [controllers.AccessToken, 'destroy']).use(middleware.auth())
       })
