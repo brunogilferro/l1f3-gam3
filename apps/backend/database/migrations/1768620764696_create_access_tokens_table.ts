@@ -1,31 +1,28 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'auth_access_tokens'
-
   async up() {
-    this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table
-        .integer('tokenable_id')
-        .notNullable()
-        .unsigned()
-        .references('id')
-        .inTable('users')
-        .onDelete('CASCADE')
-
-      table.string('type').notNullable()
-      table.string('name').nullable()
-      table.string('hash').notNullable()
-      table.text('abilities').notNullable()
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
-      table.timestamp('last_used_at').nullable()
-      table.timestamp('expires_at').nullable()
-    })
+    await this.db.rawQuery(`
+      CREATE TABLE IF NOT EXISTS "auth_access_tokens" (
+        "id" SERIAL PRIMARY KEY,
+        "tokenable_id" BIGINT NOT NULL,
+        "type" VARCHAR(255) NOT NULL,
+        "name" VARCHAR(255) NULL,
+        "hash" VARCHAR(255) NOT NULL,
+        "abilities" TEXT NOT NULL,
+        "created_at" TIMESTAMP NULL,
+        "updated_at" TIMESTAMP NULL,
+        "last_used_at" TIMESTAMP NULL,
+        "expires_at" TIMESTAMP NULL,
+        CONSTRAINT "fk_auth_tokens_player"
+          FOREIGN KEY ("tokenable_id")
+          REFERENCES "Players"("CodigoPlayer")
+          ON DELETE CASCADE
+      )
+    `)
   }
 
   async down() {
-    this.schema.dropTable(this.tableName)
+    await this.db.rawQuery(`DROP TABLE IF EXISTS "auth_access_tokens"`)
   }
 }

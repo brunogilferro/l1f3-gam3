@@ -1,12 +1,65 @@
-import { UserSchema } from '#database/schema'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { type AccessToken, DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
-export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+  uids: ['email'],
+  passwordColumnName: 'password',
+})
+
+export default class User extends compose(BaseModel, AuthFinder) {
+  static table = 'Players'
+
   static accessTokens = DbAccessTokensProvider.forModel(User)
   declare currentAccessToken?: AccessToken
+
+  @column({ isPrimary: true, columnName: 'CodigoPlayer' })
+  declare id: number
+
+  @column({ columnName: 'Nome' })
+  declare fullName: string
+
+  @column({ columnName: 'NomeCurto' })
+  declare shortName: string
+
+  @column({ columnName: 'Email' })
+  declare email: string
+
+  @column({ columnName: 'password', serializeAs: null })
+  declare password: string
+
+  @column({ columnName: 'AvatarUrl' })
+  declare avatarUrl: string | null
+
+  @column({ columnName: 'CodigoSetor' })
+  declare sectorId: number | null
+
+  @column({ columnName: 'CodigoCronotipo' })
+  declare chronotypeId: number | null
+
+  @column({ columnName: 'PrimeiroAcesso' })
+  declare firstAccess: boolean
+
+  @column({ columnName: 'OnboardingCompleto' })
+  declare onboardingComplete: boolean
+
+  @column({ columnName: 'Ativo' })
+  declare active: boolean
+
+  @column({ columnName: 'EhAI' })
+  declare isAi: boolean
+
+  @column.dateTime({ columnName: 'UltimoLoginEm' })
+  declare lastLoginAt: DateTime | null
+
+  @column.dateTime({ columnName: 'CriadoEm', autoCreate: true })
+  declare createdAt: DateTime
+
+  @column.dateTime({ columnName: 'AtualizadoEm', autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime
 
   get initials() {
     const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')

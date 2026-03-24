@@ -1,21 +1,22 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
+/**
+ * Adapts the existing Players table for AdonisJS auth:
+ * - Removes legacy SenhaHash / SenhaSalt columns
+ * - Adds standard password column (bcrypt, managed by AdonisJS)
+ */
 export default class extends BaseSchema {
-  protected tableName = 'users'
-
   async up() {
-    this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').notNullable()
-      table.string('full_name').nullable()
-      table.string('email', 254).notNullable().unique()
-      table.string('password').notNullable()
-
-      table.timestamp('created_at').notNullable()
-      table.timestamp('updated_at').nullable()
-    })
+    await this.db.rawQuery(`ALTER TABLE "Players" DROP COLUMN IF EXISTS "SenhaHash"`)
+    await this.db.rawQuery(`ALTER TABLE "Players" DROP COLUMN IF EXISTS "SenhaSalt"`)
+    await this.db.rawQuery(
+      `ALTER TABLE "Players" ADD COLUMN IF NOT EXISTS "password" VARCHAR(255) NOT NULL DEFAULT ''`
+    )
   }
 
   async down() {
-    this.schema.dropTable(this.tableName)
+    await this.db.rawQuery(`ALTER TABLE "Players" DROP COLUMN IF EXISTS "password"`)
+    await this.db.rawQuery(`ALTER TABLE "Players" ADD COLUMN IF NOT EXISTS "SenhaHash" BYTEA NOT NULL DEFAULT ''`)
+    await this.db.rawQuery(`ALTER TABLE "Players" ADD COLUMN IF NOT EXISTS "SenhaSalt" BYTEA NOT NULL DEFAULT ''`)
   }
 }

@@ -58,12 +58,17 @@ const dbConfig = defineConfig({
         host: env.get('DB_HOST'),
         port: env.get('DB_PORT'),
         user: env.get('DB_USER'),
-        password: env.get('DB_PASSWORD'),
+        password: env.get('DB_PASSWORD').release(),
         database: env.get('DB_DATABASE'),
       },
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],
+      },
+      schemaGeneration: {
+        // Disabled: tables use PascalCase which breaks Lucid's introspection queries.
+        // schema.ts is maintained manually.
+        enabled: false,
       },
       debug: app.inDev,
     },
