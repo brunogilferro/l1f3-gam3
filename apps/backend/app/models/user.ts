@@ -18,7 +18,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   static accessTokens = DbAccessTokensProvider.forModel(User)
   declare currentAccessToken?: AccessToken
 
-  @column({ isPrimary: true, columnName: 'CodigoPlayer' })
+  // consume: pg returns bigint as string — cast to number so manyToMany preload
+  // generates integer bind parameters (not text), matching integer FK columns.
+  @column({ isPrimary: true, columnName: 'CodigoPlayer', consume: (v) => Number(v) })
   declare id: number
 
   @column({ columnName: 'Nome' })

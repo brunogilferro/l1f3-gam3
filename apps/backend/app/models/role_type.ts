@@ -9,6 +9,6 @@ export default class RoleType extends BaseModel {
   @column({ columnName: 'Codigo' })
   declare code: string
 
-  @column({ columnName: 'Nome' })
+  @column({ columnName: 'Descricao' })
   declare name: string
 }
