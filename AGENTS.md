@@ -240,6 +240,108 @@ Rule: if removing the suffix still leaves a clear name, remove it.
 
 ---
 
+## Testing
+
+### When to write tests
+
+Write unit tests for **services** as soon as the service has non-trivial logic. Do not test controllers, transformers, or validators until they stabilize.
+
+Priority order:
+1. Services with rawQuery (complex joins, role derivation) — hardest to validate manually
+2. Services with manyToMany lookups
+3. Auth flows
+
+### Test structure
+
+```
+tests/
+  helpers/
+    factories.ts        ← insert minimal valid DB records
+  unit/
+    services/
+      *.spec.ts         ← one file per service
+  functional/           ← HTTP-level tests (controllers, routes)
+```
+
+### Isolation strategy
+
+| Scenario | Strategy |
+|---|---|
+| Most service tests | `group.each.setup(() => testUtils.db().withGlobalTransaction())` — rolls back after each test |
+| manyToMany `preload()` tests | withGlobalTransaction does **not** cover the secondary connection opened by preload. Commit data and clean up manually in `group.each.teardown()` |
+
+```ts
+// Standard pattern — withGlobalTransaction
+test.group('MyService', (group) => {
+  group.each.setup(() => testUtils.db().withGlobalTransaction())
+
+  test('...', async ({ assert }) => { ... })
+})
+
+// manyToMany preload pattern — manual cleanup
+test.group('MyService / manyToMany', (group) => {
+  let createdId: number | undefined
+  group.each.teardown(async () => {
+    if (createdId) {
+      await db.from('pivot_table').where('fk', createdId).delete()
+      await Model.query().where('id', createdId).delete()
+    }
+  })
+  test('...', async ({ assert }) => { ... })
+})
+```
+
+### Factory rules
+
+- Set only **required** fields; use overrides for optional ones
+- Use a module-level `seq` counter for unique string fields (email, name)
+- Tables with composite PKs (no Lucid PK support): use `db.rawQuery()` or `db.table().insert()` directly
+- manyToMany pivot inserts: use `db.rawQuery()` — `model.related().attach()` may bypass the global transaction
+
+### bigint columns
+
+PostgreSQL `bigint` is returned as a JS string by the `pg` driver. For columns that are `bigint` PKs used as FK targets in `integer` columns (e.g. manyToMany pivot), add `consume: (v) => Number(v)` to the `@column` decorator so Lucid sends integer bind parameters instead of text:
+
+```ts
+@column({ isPrimary: true, columnName: 'CodigoPlayer', consume: (v) => Number(v) })
+declare id: number
+```
+
+Without this, Lucid's manyToMany `preload()` generates `WHERE pivot_fk IN ('123')` (text bind) which does not match an `integer` FK column.
+
+### Lookup IDs
+
+Seeded lookup table IDs never change — hardcode them in factories with a `LOOKUP` constant and a comment:
+
+```ts
+// Lookup IDs (seeded, never change)
+export const LOOKUP = {
+  project: { statusActive: 1, gameTypeTournament: 1 },
+  table: { statusActive: 1, typeIndependent: 1, levelAttraction: 1 },
+  roleType: { admin: 1, liderProjeto: 2, liderMesa: 3, dealer: 4, jogador: 5 },
+} as const
+```
+
+### DB sequences
+
+If tests fail with `duplicate key value violates unique constraint`, run:
+
+```sql
+SELECT setval('"TableName_ColumnName_seq"', (SELECT MAX("ColumnName") FROM "TableName"));
+```
+
+This happens when rows were inserted directly (bypassing the sequence). Each table's sequence must be ≥ its max existing ID.
+
+### Run tests
+
+```bash
+node ace test unit          # all unit tests
+node ace test unit --watch  # watch mode
+node ace test               # all suites
+```
+
+---
+
 ## Enforcement
 
 - If a component exists in the registry → use it, do not recreate
