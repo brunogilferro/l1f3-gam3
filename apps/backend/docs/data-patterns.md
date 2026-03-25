@@ -34,31 +34,36 @@ chains.
 `db.rawQuery` returns `{ rows: T[] }`. We use a generic alias to avoid
 repeating that wrapper inline on every call.
 
-**Type file:** `app/types/raw_query.ts`
+**Type files:** `app/types/db_rows/`
 
-```ts
-export type QueryResult<T> = { rows: T[] }
+```
+app/types/db_rows/
+├── shared.ts     → QueryResult<T>
+├── project.ts    → Projects, Project, ProjectTables
+└── account.ts    → AccountContext
 ```
 
-**Usage:**
+`QueryResult<T>` is defined in `shared.ts` and imported separately from the domain types:
 
 ```ts
 import db from '@adonisjs/lucid/services/db'
-import type { QueryResult, Projects } from '#types/raw_query'
+import type { Projects } from '#types/db_rows/project'
+import type { QueryResult } from '#types/db_rows/shared'
 
 const result = await db.rawQuery<QueryResult<Projects>>(sql, [userId])
 result.rows.map((row) => row.project_id)
 ```
 
-**Types defined in `app/types/raw_query.ts`:**
+When adding a new entity with rawQuery, create `app/types/db_rows/<entity>.ts` following the DB hierarchy naming (e.g. `Projetos_Mesas_Maos` → `project_table_hand.ts`).
 
-| Type         | Used in                     |
-| ------------ | --------------------------- |
-| `Projects`   | `ProjectService.list`       |
-| `Project`    | `ProjectService.find`       |
-| `Tables`     | `ProjectService.listTables` |
-| `RoleRow`    | `MeContextController.show`  |
-| `ContextRow` | `MeContextController.show`  |
+**Current types:**
+
+| Type             | File                        | Used in                      |
+| ---------------- | --------------------------- | ---------------------------- |
+| `Projects`       | `db_rows/project.ts`        | `ProjectService.list`        |
+| `Project`        | `db_rows/project.ts`        | `ProjectService.find`        |
+| `ProjectTables`  | `db_rows/project.ts`        | `ProjectService.listTables`  |
+| `AccountContext` | `db_rows/account.ts`        | `AccountService.getContext`  |
 
 ---
 

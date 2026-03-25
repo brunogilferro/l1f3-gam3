@@ -97,7 +97,8 @@ Use **Lucid ORM / query builder** by default. Only use **`db.rawQuery`** when th
 **Rules when using rawQuery:**
 - Add a JSDoc comment explaining why Lucid is insufficient for that query
 - Extract repeated SQL fragments (e.g. access check `WHERE` clause) as named string constants
-- Type the result with `QueryResult<T>` from `#types/raw_query`
+- Create a row type in `app/types/db_rows/<entity>.ts` and import via `#types/db_rows/<entity>`
+- Import `QueryResult<T>` from `#types/db_rows/shared`
 - Always convert snake_case DB rows to camelCase inside `.map()` immediately after the query
 
 ---
