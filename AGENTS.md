@@ -83,6 +83,23 @@ Never create a component that already exists.
 - All responses wrapped via `ctx.serialize()` → `{ data: ... }`
 - See `docs/api-conventions.md` for full response format and patterns
 
+### rawQuery vs Lucid
+
+Use **Lucid ORM / query builder** by default. Only use **`db.rawQuery`** when the query requires:
+
+| Condition | Example |
+|---|---|
+| Role derivation via FK boolean checks | `(p."CodigoLiderProjeto" = ?) AS is_leader` |
+| `COUNT DISTINCT` with `GROUP BY` | participant count per table |
+| `EXISTS` subqueries for access checks | user has any participation in project |
+| Complex `OR` conditions across multiple joined tables | leader OR table_leader OR dealer OR participant |
+
+**Rules when using rawQuery:**
+- Add a JSDoc comment explaining why Lucid is insufficient for that query
+- Extract repeated SQL fragments (e.g. access check `WHERE` clause) as named string constants
+- Type the result with `QueryResult<T>` from `#types/raw_query`
+- Always convert snake_case DB rows to camelCase inside `.map()` immediately after the query
+
 ---
 
 ## Component Library
@@ -178,8 +195,8 @@ Example: `feat(auth): add password reset flow`
 
 | Layer | Rule | Example |
 |-------|------|---------|
-| Files | `snake_case` English | `table_participant.ts`, `me_context_controller.ts` |
-| Classes | `PascalCase` English | `class Table`, `class TableParticipant` |
+| Files | `snake_case` English, reflecting DB hierarchy | `project_table.ts`, `project_table_participant.ts` |
+| Classes | `PascalCase` English, reflecting DB hierarchy | `class ProjectTable`, `class ProjectTableParticipant` |
 | Variables / functions | `camelCase` English | `projectId`, `findByEmail()` |
 | Types / interfaces | `PascalCase` English | `type TableRole`, `interface TableEntry` |
 | API response keys | `camelCase` English | `{ projectId, tableName, tableRole }` |
@@ -187,6 +204,19 @@ Example: `feat(auth): add password reset flow`
 | Role values (from DB) | Map Portuguese codes to English in the API layer | `lider_projeto` → `project_leader` |
 
 **Portuguese is only allowed inside `columnName` strings** — the bridge between English code and the existing Portuguese database schema.
+
+### Entity naming mirrors DB table hierarchy
+
+DB table names encode the parent-child relationship through prefixes (`Projetos_Mesas_Participantes` belongs to `Projetos_Mesas` which belongs to `Projetos`). Model files, classes, and raw query types **must mirror this hierarchy** in English:
+
+| DB table | File | Class | Raw query type |
+|---|---|---|---|
+| `Projetos` | `project.ts` | `Project` | `Projects` / `Project` |
+| `Projetos_Mesas` | `project_table.ts` | `ProjectTable` | `ProjectTables` |
+| `Projetos_Mesas_Participantes` | `project_table_participant.ts` | `ProjectTableParticipant` | `ProjectTableParticipants` |
+| `Projetos_Mesas_Maos` | `project_table_hand.ts` | `ProjectTableHand` | `ProjectTableHands` |
+
+Rule: translate each segment of the DB table name to English, join with the parent prefix. Never abbreviate or drop the parent context.
 
 ### Naming conciseness
 

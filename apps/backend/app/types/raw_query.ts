@@ -39,9 +39,9 @@ export type Project = Projects & {
   has_access: boolean
 }
 
-// ─── Tables ──────────────────────────────────────────────────────────────────
+// ─── ProjectTables ────────────────────────────────────────────────────────────
 
-export type Tables = {
+export type ProjectTables = {
   table_id: number
   name: string
   description: string | null
@@ -60,13 +60,9 @@ export type Tables = {
   created_at: string
 }
 
-// ─── Me / Context ─────────────────────────────────────────────────────────────
+// ─── Account / Context ────────────────────────────────────────────────────────
 
-export type RoleRow = {
-  role_code: string
-}
-
-export type ContextRow = {
+export type AccountContext = {
   table_id: number
   table_name: string
   meeting_link: string | null

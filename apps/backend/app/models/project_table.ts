@@ -1,7 +1,7 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export default class Table extends BaseModel {
+export default class ProjectTable extends BaseModel {
   static table = 'Projetos_Mesas'
 
   @column({ isPrimary: true, columnName: 'CodigoMesa' })

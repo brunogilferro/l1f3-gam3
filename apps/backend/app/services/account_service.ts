@@ -1,5 +1,6 @@
+import User from '#models/user'
+import type { AccountContext, QueryResult } from '#types/raw_query'
 import db from '@adonisjs/lucid/services/db'
-import type { QueryResult, RoleRow, ContextRow } from '#types/raw_query'
 
 type GlobalRole = 'admin' | 'project_leader' | 'table_leader' | 'dealer' | 'player'
 type TableRole = 'project_leader' | 'table_leader' | 'dealer' | 'player'
@@ -12,7 +13,7 @@ const ROLE_MAP: Record<string, GlobalRole> = {
   jogador: 'player',
 }
 
-interface TableEntry {
+interface ProjectTableEntry {
   tableId: number
   tableName: string
   tableRole: TableRole
@@ -23,7 +24,7 @@ interface ProjectEntry {
   projectId: number
   projectName: string
   projectRole: 'project_leader' | 'participant'
-  tables: TableEntry[]
+  tables: ProjectTableEntry[]
 }
 
 export interface UserContext {
@@ -31,21 +32,13 @@ export interface UserContext {
   projects: ProjectEntry[]
 }
 
-export default class MeContextService {
+export default class AccountService {
   async getContext(userId: number): Promise<UserContext> {
-    const rolesResult = await db.rawQuery<QueryResult<RoleRow>>(
-      `SELECT tp."Codigo" AS role_code
-       FROM "Players_Perfis" pp
-       JOIN "Players_TipoPerfil" tp ON tp."CodigoTipoPerfil" = pp."CodigoTipoPerfil"
-       WHERE pp."CodigoPlayer" = ?`,
-      [userId]
-    )
+    const user = await User.query().preload('roleTypes').where('id', userId).firstOrFail()
 
-    const globalRoles: GlobalRole[] = rolesResult.rows
-      .map((r) => ROLE_MAP[r.role_code])
-      .filter(Boolean)
+    const globalRoles: GlobalRole[] = user.roleTypes.map((rt) => ROLE_MAP[rt.code]).filter(Boolean)
 
-    const tablesResult = await db.rawQuery<QueryResult<ContextRow>>(
+    const tablesResult = await db.rawQuery<QueryResult<AccountContext>>(
       `SELECT
          m."CodigoMesa"     AS table_id,
          m."Nome"           AS table_name,
@@ -79,7 +72,7 @@ export default class MeContextService {
       else if (row.is_table_leader) tableRole = 'table_leader'
       else if (row.is_dealer) tableRole = 'dealer'
 
-      const table: TableEntry = {
+      const table: ProjectTableEntry = {
         tableId: row.table_id,
         tableName: row.table_name,
         tableRole,

@@ -1,5 +1,7 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+import RoleType from '#models/role_type'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
@@ -60,6 +62,15 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column.dateTime({ columnName: 'AtualizadoEm', autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @manyToMany(() => RoleType, {
+    localKey: 'id',
+    pivotTable: 'Players_Perfis',
+    pivotForeignKey: 'CodigoPlayer',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'CodigoTipoPerfil',
+  })
+  declare roleTypes: ManyToMany<typeof RoleType>
 
   get initials() {
     const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')

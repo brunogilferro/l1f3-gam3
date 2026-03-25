@@ -1,7 +1,7 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export default class TableParticipant extends BaseModel {
+export default class ProjectTableParticipant extends BaseModel {
   static table = 'Projetos_Mesas_Participantes'
 
   // Composite PK: CodigoMesa + CodigoPlayer
