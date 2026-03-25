@@ -1,10 +1,15 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+/**
+ * Composite PK: CodigoMesa + CodigoPlayer
+ * Lucid does not support composite PKs natively.
+ * Always query with .where('CodigoMesa', x).andWhere('CodigoPlayer', y)
+ */
 export default class ProjectTableParticipant extends BaseModel {
   static table = 'Projetos_Mesas_Participantes'
+  static selfAssignPrimaryKey = true
 
-  // Composite PK: CodigoMesa + CodigoPlayer
   @column({ columnName: 'CodigoMesa' })
   declare tableId: number
 
