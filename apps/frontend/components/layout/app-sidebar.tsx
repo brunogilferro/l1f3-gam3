@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
   PanelLeftClose,
   PanelLeftOpen,
@@ -25,7 +24,6 @@ export function AppSidebar({
   selectedTableId,
 }: AppSidebarProps) {
   const [open, setOpen] = useState(true);
-  const pathname = usePathname();
 
   if (!open) {
     return (

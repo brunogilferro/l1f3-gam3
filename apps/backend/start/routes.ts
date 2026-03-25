@@ -19,19 +19,27 @@ router
   .group(() => {
     router
       .group(() => {
-        router.post('login', [controllers.AccessToken, 'store'])
-        router.post('logout', [controllers.AccessToken, 'destroy']).use(middleware.auth())
+        router.post('login', [controllers.Auth, 'store'])
+        router.post('logout', [controllers.Auth, 'destroy']).use(middleware.auth())
       })
       .prefix('auth')
-      .as('auth')
 
     router
       .group(() => {
-        router.get('/profile', [controllers.Profile, 'show'])
-        router.get('/context', [controllers.MeContext, 'show'])
+        router.get('/profile', [controllers.Account, 'profile'])
+        router.get('/context', [controllers.Account, 'context'])
       })
       .prefix('account')
-      .as('account')
+      .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.get('/', [controllers.Project, 'index'])
+        router.get('/:id', [controllers.Project, 'show'])
+        router.get('/:id/tables', [controllers.Project, 'tables'])
+      })
+      .prefix('projects')
+      .as('projects')
       .use(middleware.auth())
   })
   .prefix('/api/v1')

@@ -5,7 +5,7 @@ export type LoginPayload = {
 }
 
 export type LoggedUser = {
-  id: string
+  id: number
   fullName: string
   shortName: string
   email: string
@@ -17,8 +17,8 @@ export type LoggedUser = {
   active: boolean
   isAi: boolean
   lastLoginAt: string | null
-  createdAt: string
-  updatedAt: string
+  createdAt: string | null
+  updatedAt: string | null
   initials: string
 }
 

@@ -1,10 +1,9 @@
 import db from '@adonisjs/lucid/services/db'
-import type { HttpContext } from '@adonisjs/core/http'
+import type { QueryResult, RoleRow, ContextRow } from '#types/raw_query'
 
 type GlobalRole = 'admin' | 'project_leader' | 'table_leader' | 'dealer' | 'player'
 type TableRole = 'project_leader' | 'table_leader' | 'dealer' | 'player'
 
-// Maps DB Portuguese role codes to English API values
 const ROLE_MAP: Record<string, GlobalRole> = {
   admin: 'admin',
   lider_projeto: 'project_leader',
@@ -13,27 +12,28 @@ const ROLE_MAP: Record<string, GlobalRole> = {
   jogador: 'player',
 }
 
-interface TableContext {
+interface TableEntry {
   tableId: number
   tableName: string
   tableRole: TableRole
   meetingLink: string | null
 }
 
-interface ProjectContext {
+interface ProjectEntry {
   projectId: number
   projectName: string
   projectRole: 'project_leader' | 'participant'
-  tables: TableContext[]
+  tables: TableEntry[]
 }
 
-export default class MeContextController {
-  async show({ auth, response }: HttpContext) {
-    const user = auth.getUserOrFail()
-    const userId = user.id
+export interface UserContext {
+  globalRoles: GlobalRole[]
+  projects: ProjectEntry[]
+}
 
-    // 1. Global roles from Players_Perfis
-    const globalRolesRows = await db.rawQuery<{ rows: { role_code: string }[] }>(
+export default class MeContextService {
+  async getContext(userId: number): Promise<UserContext> {
+    const rolesResult = await db.rawQuery<QueryResult<RoleRow>>(
       `SELECT tp."Codigo" AS role_code
        FROM "Players_Perfis" pp
        JOIN "Players_TipoPerfil" tp ON tp."CodigoTipoPerfil" = pp."CodigoTipoPerfil"
@@ -41,24 +41,11 @@ export default class MeContextController {
       [userId]
     )
 
-    const globalRoles: GlobalRole[] = globalRolesRows.rows
+    const globalRoles: GlobalRole[] = rolesResult.rows
       .map((r) => ROLE_MAP[r.role_code])
       .filter(Boolean)
 
-    // 2. All tables the user participates in (any role), with derived role
-    const tablesRows = await db.rawQuery<{
-      rows: {
-        table_id: number
-        table_name: string
-        meeting_link: string | null
-        project_id: number
-        project_name: string
-        is_project_leader: boolean
-        is_table_leader: boolean
-        is_dealer: boolean
-        is_participant: boolean
-      }[]
-    }>(
+    const tablesResult = await db.rawQuery<QueryResult<ContextRow>>(
       `SELECT
          m."CodigoMesa"     AS table_id,
          m."Nome"           AS table_name,
@@ -84,17 +71,15 @@ export default class MeContextController {
       [userId, userId, userId, userId, userId, userId, userId, userId]
     )
 
-    // 3. Group tables by project and derive roles
-    const projectsMap = new Map<number, ProjectContext>()
+    const projectsMap = new Map<number, ProjectEntry>()
 
-    for (const row of tablesRows.rows) {
-      // Derive table role — priority: project_leader > table_leader > dealer > player
+    for (const row of tablesResult.rows) {
       let tableRole: TableRole = 'player'
       if (row.is_project_leader) tableRole = 'project_leader'
       else if (row.is_table_leader) tableRole = 'table_leader'
       else if (row.is_dealer) tableRole = 'dealer'
 
-      const table: TableContext = {
+      const table: TableEntry = {
         tableId: row.table_id,
         tableName: row.table_name,
         tableRole,
@@ -113,11 +98,9 @@ export default class MeContextController {
       projectsMap.get(row.project_id)!.tables.push(table)
     }
 
-    return response.ok({
-      data: {
-        globalRoles,
-        projects: Array.from(projectsMap.values()),
-      },
-    })
+    return {
+      globalRoles,
+      projects: Array.from(projectsMap.values()),
+    }
   }
 }

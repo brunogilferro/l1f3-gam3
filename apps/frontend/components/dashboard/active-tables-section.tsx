@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { Target, ArrowRight, Calendar } from 'lucide-react';
-import type { Project, Table, Hand } from '@/types/game';
+import type { Table, Hand } from '@/types/game';
 
 type TableWithMeta = Table & {
   projectId: string;

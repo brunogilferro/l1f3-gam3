@@ -163,9 +163,11 @@ export function AppHeader() {
             className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-bg-surface border-2 border-border-secondary hover:border-accent-primary transition-colors flex items-center justify-center overflow-hidden cursor-pointer"
             suppressHydrationWarning
           >
-            {user?.avatarUrl ? (
+            {user?.avatarUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={user.avatarUrl} alt="" className="w-full h-full object-cover" />
-            ) : (
+            )}
+            {!user?.avatarUrl && (
               <span className="text-xs text-text-secondary font-medium" suppressHydrationWarning>
                 {initials}
               </span>
