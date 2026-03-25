@@ -1,5 +1,6 @@
 import User from '#models/user'
-import type { AccountContext, QueryResult } from '#types/raw_query'
+import type { AccountContext } from '#types/db_rows/account'
+import type { QueryResult } from '#types/db_rows/shared'
 import db from '@adonisjs/lucid/services/db'
 
 type GlobalRole = 'admin' | 'project_leader' | 'table_leader' | 'dealer' | 'player'

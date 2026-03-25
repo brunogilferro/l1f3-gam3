@@ -1,4 +1,5 @@
-import type { Project, Projects, ProjectTables, QueryResult } from '#types/raw_query'
+import type { Project, Projects, ProjectTables } from '#types/db_rows/project'
+import type { QueryResult } from '#types/db_rows/shared'
 import db from '@adonisjs/lucid/services/db'
 
 type ProjectRole = 'project_leader' | 'participant'
