@@ -119,6 +119,18 @@ test.group('ProjectService.find', (group) => {
     assert.lengthOf(result!.tables, 1)
   })
 
+  test('returns role participant for non-leader', async ({ assert }) => {
+    const owner = await makeUser()
+    const user = await makeUser()
+    const project = await makeProject(owner.id)
+    await makeProjectTable(project.id, user.id, owner.id)
+
+    const result = await service.find(project.id, user.id)
+
+    assert.isNotNull(result)
+    assert.equal(result!.role, 'participant')
+  })
+
   test('returns null if user has no access', async ({ assert }) => {
     const owner = await makeUser()
     const user = await makeUser()

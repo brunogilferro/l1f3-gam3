@@ -173,7 +173,7 @@ export default class ProjectService {
         : null,
       leaderId: project.leader_id,
       sectorId: project.sector_id,
-      role: (project.is_project_leader ? 'project_leader' : 'player') as ProjectRole,
+      role: (project.is_project_leader ? 'project_leader' : 'participant') as ProjectRole,
       tables,
       createdAt: project.created_at,
       updatedAt: project.updated_at,
