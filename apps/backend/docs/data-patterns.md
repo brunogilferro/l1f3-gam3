@@ -16,11 +16,11 @@ predictable.
 User roles in this system are **implicit** — there is no `role` column in
 `Projetos_Mesas_Participantes`. Roles are derived from FK references:
 
-| Role             | Derived from                          |
-| ---------------- | ------------------------------------- |
-| `project_leader` | `Projetos.CodigoLiderProjeto = userId` |
-| `table_leader`   | `Projetos_Mesas.CodigoLiderMesa = userId` |
-| `dealer`         | `Projetos_Mesas.CodigoDealer = userId` |
+| Role             | Derived from                                                             |
+| ---------------- | ------------------------------------------------------------------------ |
+| `project_leader` | `Projetos.CodigoLiderProjeto = userId`                                   |
+| `table_leader`   | `Projetos_Mesas.CodigoLiderMesa = userId`                                |
+| `dealer`         | `Projetos_Mesas.CodigoDealer = userId`                                   |
 | `player`         | `Projetos_Mesas_Participantes.CodigoPlayer = userId` (none of the above) |
 
 This requires `CASE WHEN`, `EXISTS`, and `COUNT DISTINCT` across multiple
@@ -52,13 +52,13 @@ result.rows.map((row) => row.project_id)
 
 **Types defined in `app/types/raw_query.ts`:**
 
-| Type         | Used in                         |
-| ------------ | ------------------------------- |
-| `Projects`   | `ProjectService.list`           |
-| `Project`    | `ProjectService.find`           |
-| `Tables`     | `ProjectService.listTables`     |
-| `RoleRow`    | `MeContextController.show`      |
-| `ContextRow` | `MeContextController.show`      |
+| Type         | Used in                     |
+| ------------ | --------------------------- |
+| `Projects`   | `ProjectService.list`       |
+| `Project`    | `ProjectService.find`       |
+| `Tables`     | `ProjectService.listTables` |
+| `RoleRow`    | `MeContextController.show`  |
+| `ContextRow` | `MeContextController.show`  |
 
 ---
 

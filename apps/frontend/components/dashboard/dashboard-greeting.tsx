@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'motion/react';
-import { Plus } from 'lucide-react';
-import { useState } from 'react';
 import { useAuth } from '@/context/auth-context';
+import { Plus } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -45,7 +45,10 @@ export function DashboardGreeting({
                 {firstName}
               </span>
             </h1>
-            <p className="text-sm text-text-secondary mt-1" suppressHydrationWarning>
+            <p
+              className="text-sm text-text-secondary mt-1"
+              suppressHydrationWarning
+            >
               Você tem{' '}
               <span className="text-accent-primary">
                 {upcomingHandsCount}{' '}
@@ -66,7 +69,8 @@ export function DashboardGreeting({
             onClick={() => setShowCreateProject(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[12px] text-bg-secondary tracking-[0.6px] cursor-pointer transition-all"
             style={{
-              backgroundImage: 'linear-gradient(169deg, #c4a030 0%, #a08020 100%)',
+              backgroundImage:
+                'linear-gradient(169deg, #c4a030 0%, #a08020 100%)',
             }}
           >
             <Plus className="w-4 h-4" />
@@ -85,7 +89,9 @@ export function DashboardGreeting({
             className="bg-bg-surface border border-border-primary rounded-xl p-6 w-[480px] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-base text-text-primary mb-2">Solicitar Projeto</h2>
+            <h2 className="text-base text-text-primary mb-2">
+              Solicitar Projeto
+            </h2>
             <p className="text-sm text-text-secondary mb-4">
               Em breve disponível.
             </p>

@@ -1,21 +1,21 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { AnimatePresence, motion } from 'motion/react';
+import { useAuth } from '@/context/auth-context';
 import {
-  Star,
   Bell,
-  LogOut,
-  LayoutDashboard,
-  Inbox,
   Coins,
   FolderKanban,
+  Inbox,
+  LayoutDashboard,
+  LogOut,
   Menu,
+  Star,
   X,
 } from 'lucide-react';
-import { useAuth } from '@/context/auth-context';
+import { AnimatePresence, motion } from 'motion/react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 
 const NAV_ITEMS = [
   { href: '/', label: 'DASHBOARD', icon: LayoutDashboard },
@@ -50,7 +50,8 @@ export function AppHeader() {
     router.push('/login');
   }
 
-  const initials = user?.initials ?? user?.shortName?.slice(0, 2).toUpperCase() ?? '??';
+  const initials =
+    user?.initials ?? user?.shortName?.slice(0, 2).toUpperCase() ?? '??';
 
   return (
     <header className="bg-bg-primary h-14 flex items-center justify-between px-3 md:px-5 border-b border-border-primary shrink-0 z-30">
@@ -66,7 +67,10 @@ export function AppHeader() {
         </button>
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 cursor-pointer shrink-0">
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 cursor-pointer shrink-0"
+        >
           <Star className="w-5 h-5 text-accent-primary fill-accent-primary" />
           <span className="text-[15px] tracking-[2px] text-text-primary hidden sm:inline">
             L1F3 <span className="text-accent-primary">GAME</span>
@@ -124,7 +128,9 @@ export function AppHeader() {
                 <div className="px-4 py-3 border-b border-border-primary flex items-center justify-between shrink-0">
                   <div className="flex items-center gap-2">
                     <Bell className="w-4 h-4 text-accent-primary" />
-                    <span className="text-sm text-text-primary">Notificações</span>
+                    <span className="text-sm text-text-primary">
+                      Notificações
+                    </span>
                   </div>
                   <button
                     onClick={() => setNotificationsOpen(false)}
@@ -135,7 +141,9 @@ export function AppHeader() {
                 </div>
                 <div className="flex flex-col items-center justify-center py-12 gap-2">
                   <Bell className="w-8 h-8 text-border-primary" />
-                  <p className="text-xs text-text-secondary">Nenhuma notificação</p>
+                  <p className="text-xs text-text-secondary">
+                    Nenhuma notificação
+                  </p>
                 </div>
                 <div className="px-4 py-2.5 border-t border-border-primary shrink-0">
                   <Link
@@ -165,10 +173,17 @@ export function AppHeader() {
           >
             {user?.avatarUrl && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.avatarUrl} alt="" className="w-full h-full object-cover" />
+              <img
+                src={user.avatarUrl}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             )}
             {!user?.avatarUrl && (
-              <span className="text-xs text-text-secondary font-medium" suppressHydrationWarning>
+              <span
+                className="text-xs text-text-secondary font-medium"
+                suppressHydrationWarning
+              >
                 {initials}
               </span>
             )}

@@ -1,8 +1,8 @@
-import { DashboardGreeting } from '@/components/dashboard/dashboard-greeting';
-import { StatsGrid } from '@/components/dashboard/stats-grid';
-import { BetsSection } from '@/components/dashboard/bets-section';
-import { ProjectRequestsSection } from '@/components/dashboard/project-requests-section';
 import { ActiveTablesSection } from '@/components/dashboard/active-tables-section';
+import { BetsSection } from '@/components/dashboard/bets-section';
+import { DashboardGreeting } from '@/components/dashboard/dashboard-greeting';
+import { ProjectRequestsSection } from '@/components/dashboard/project-requests-section';
+import { StatsGrid } from '@/components/dashboard/stats-grid';
 
 export default function DashboardPage() {
   // TODO: fetch real data from API

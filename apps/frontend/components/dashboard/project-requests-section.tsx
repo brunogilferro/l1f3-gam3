@@ -1,9 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Building2, CheckCircle2, XCircle, Clock, Check, X } from 'lucide-react';
 import type { ProjectRequest } from '@/types/game';
+import {
+  Building2,
+  Check,
+  CheckCircle2,
+  Clock,
+  X,
+  XCircle,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 
 interface ProjectRequestsSectionProps {
   // TODO: receive from API once project requests endpoint is ready
@@ -31,7 +38,9 @@ export function ProjectRequestsSection({
   onApprove,
   onReject,
 }: ProjectRequestsSectionProps) {
-  const [decisionModal, setDecisionModal] = useState<DecisionModal | null>(null);
+  const [decisionModal, setDecisionModal] = useState<DecisionModal | null>(
+    null
+  );
   const [reason, setReason] = useState('');
 
   if (requests.length === 0) return null;
@@ -194,9 +203,7 @@ export function ProjectRequestsSection({
                 </button>
                 <button
                   onClick={handleConfirm}
-                  disabled={
-                    decisionModal.action === 'reject' && !reason.trim()
-                  }
+                  disabled={decisionModal.action === 'reject' && !reason.trim()}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs text-bg-secondary tracking-[0.5px] cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                     decisionModal.action === 'approve'
                       ? 'bg-gradient-to-b from-green-500 to-green-600'

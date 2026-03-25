@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -63,8 +63,8 @@
   --font-body: 'Inter', sans-serif;
 
   /* Accent (shared across themes) */
-  --accent-primary: #C4A030;
-  --accent-primary-hover: #C4A030;
+  --accent-primary: #c4a030;
+  --accent-primary-hover: #c4a030;
   --accent-secondary: #38bdf8;
 
   /* Background */
@@ -111,7 +111,6 @@
 }
 
 /* ── Dark theme override (only present when theme = both) ─────────────────── */
-
 
 @layer base {
   * {

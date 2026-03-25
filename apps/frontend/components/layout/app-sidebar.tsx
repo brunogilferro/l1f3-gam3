@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  FolderKanban,
-} from 'lucide-react';
 import type { Project, Table } from '@/types/game';
+import { FolderKanban, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface AppSidebarProps {
   // TODO: receive projects/tables from server component or context once API is ready
@@ -43,7 +39,9 @@ export function AppSidebar({
     <aside className="hidden md:flex w-[220px] shrink-0 border-r border-border-primary bg-bg-primary flex-col h-full overflow-y-auto">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border-primary">
-        <span className="text-[11px] text-text-secondary tracking-[2px]">NAVEGAÇÃO</span>
+        <span className="text-[11px] text-text-secondary tracking-[2px]">
+          NAVEGAÇÃO
+        </span>
         <button
           onClick={() => setOpen(false)}
           className="p-1 text-text-secondary hover:text-text-primary cursor-pointer rounded-lg transition-colors"
@@ -76,7 +74,9 @@ export function AppSidebar({
                   }`}
                 >
                   <FolderKanban className="w-[15px] h-[15px] shrink-0" />
-                  <span className="text-[13px] truncate flex-1">{project.name}</span>
+                  <span className="text-[13px] truncate flex-1">
+                    {project.name}
+                  </span>
                   <span
                     className={`text-[8px] px-1.5 py-0.5 rounded shrink-0 tracking-[0.5px] border ${
                       project.gameType === 'cash_game'
@@ -110,7 +110,9 @@ export function AppSidebar({
                   }`}
                 >
                   <div className="w-2 h-2 rounded-full bg-accent-secondary shrink-0" />
-                  <span className="text-[13px] truncate flex-1">{table.name}</span>
+                  <span className="text-[13px] truncate flex-1">
+                    {table.name}
+                  </span>
                 </Link>
               ))}
             </div>

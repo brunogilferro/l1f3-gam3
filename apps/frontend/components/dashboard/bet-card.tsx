@@ -1,16 +1,16 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
+import type { ApprovedBet, DeliveryStatus } from '@/types/game';
 import {
-  Play,
-  Pause,
-  CheckCircle2,
-  Timer,
   CalendarClock,
+  CheckCircle2,
+  Pause,
+  Play,
+  Timer,
   Trophy,
 } from 'lucide-react';
-import type { ApprovedBet, DeliveryStatus } from '@/types/game';
+import { motion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -45,21 +45,53 @@ function getDaysRemaining(deadlineDate?: string): number | null {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   deadline.setHours(0, 0, 0, 0);
-  return Math.ceil((deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.ceil(
+    (deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  );
 }
 
 function getUrgencyConfig(daysRemaining: number | null, isDelivered: boolean) {
   if (isDelivered)
-    return { color: 'text-green-500', label: 'Entregue', borderColor: 'border-green-500/15', bgColor: 'bg-green-500/[0.08]' };
+    return {
+      color: 'text-green-500',
+      label: 'Entregue',
+      borderColor: 'border-green-500/15',
+      bgColor: 'bg-green-500/[0.08]',
+    };
   if (daysRemaining === null)
-    return { color: 'text-text-secondary', label: '', borderColor: '', bgColor: '' };
+    return {
+      color: 'text-text-secondary',
+      label: '',
+      borderColor: '',
+      bgColor: '',
+    };
   if (daysRemaining <= 0)
-    return { color: 'text-red-500', label: daysRemaining === 0 ? 'Hoje' : 'Atrasada', borderColor: 'border-red-500/15', bgColor: 'bg-red-500/[0.08]' };
+    return {
+      color: 'text-red-500',
+      label: daysRemaining === 0 ? 'Hoje' : 'Atrasada',
+      borderColor: 'border-red-500/15',
+      bgColor: 'bg-red-500/[0.08]',
+    };
   if (daysRemaining === 1)
-    return { color: 'text-red-500', label: 'Amanhã', borderColor: 'border-red-500/12', bgColor: 'bg-red-500/[0.06]' };
+    return {
+      color: 'text-red-500',
+      label: 'Amanhã',
+      borderColor: 'border-red-500/12',
+      bgColor: 'bg-red-500/[0.06]',
+    };
   if (daysRemaining <= 3)
-    return { color: 'text-yellow-500', label: `em ${daysRemaining} dias`, borderColor: 'border-yellow-500/12', bgColor: 'bg-yellow-500/[0.06]' };
-  return { color: 'text-text-secondary', label: `em ${daysRemaining} dias`, borderColor: 'border-border-primary', bgColor: '' };
+    return {
+      color: 'text-yellow-500',
+      label: `em ${daysRemaining} dias`,
+      borderColor: 'border-yellow-500/12',
+      bgColor: 'bg-yellow-500/[0.06]',
+    };
+  return {
+    color: 'text-text-secondary',
+    label: `em ${daysRemaining} dias`,
+    borderColor: 'border-border-primary',
+    bgColor: '',
+  };
 }
 
 const STATUS_CONFIG: Record<
@@ -144,14 +176,19 @@ function FeaturedBetCard({ bet }: { bet: ApprovedBet }) {
 
           <div className="flex items-center gap-3 ml-5 mb-3">
             {bet.tableName && (
-              <span className="text-[11px] text-text-secondary">{bet.tableName}</span>
+              <span className="text-[11px] text-text-secondary">
+                {bet.tableName}
+              </span>
             )}
             {bet.deadlineDate && (
               <>
                 <span className="text-[10px] text-border-secondary">·</span>
-                <span className={`text-[11px] flex items-center gap-1.5 ${urgency.color}`}>
+                <span
+                  className={`text-[11px] flex items-center gap-1.5 ${urgency.color}`}
+                >
                   <CalendarClock className="w-3 h-3" />
-                  {bet.deadlineHandNumber && `Mão #${bet.deadlineHandNumber} · `}
+                  {bet.deadlineHandNumber &&
+                    `Mão #${bet.deadlineHandNumber} · `}
                   {bet.deadlineDate}
                   {urgency.label && (
                     <span
@@ -174,11 +211,15 @@ function FeaturedBetCard({ bet }: { bet: ApprovedBet }) {
               <div className="flex items-center gap-4 text-[10px]">
                 <span className="text-text-secondary">
                   Apostado:{' '}
-                  <span className="text-text-secondary">{fmtMin(committedMin)}</span>
+                  <span className="text-text-secondary">
+                    {fmtMin(committedMin)}
+                  </span>
                 </span>
                 <span className="text-text-secondary">
                   Falta:{' '}
-                  <span className="text-accent-primary">{fmtMin(remainingMin)}</span>
+                  <span className="text-accent-primary">
+                    {fmtMin(remainingMin)}
+                  </span>
                 </span>
               </div>
             </div>
@@ -231,7 +272,9 @@ function CompactBetCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15 }}
       className={`bg-bg-surface rounded-xl border p-4 transition-colors ${
-        isNext ? 'border-accent-primary/20' : 'border-border-primary hover:border-border-secondary'
+        isNext
+          ? 'border-accent-primary/20'
+          : 'border-border-primary hover:border-border-secondary'
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -247,10 +290,14 @@ function CompactBetCard({
 
           <div className="flex items-center gap-2 flex-wrap">
             {bet.tableName && (
-              <span className="text-[11px] text-text-secondary">{bet.tableName}</span>
+              <span className="text-[11px] text-text-secondary">
+                {bet.tableName}
+              </span>
             )}
             {bet.deadlineDate && (
-              <span className={`text-[11px] flex items-center gap-1 ${urgency.color}`}>
+              <span
+                className={`text-[11px] flex items-center gap-1 ${urgency.color}`}
+              >
                 <CalendarClock className="w-3 h-3" />
                 {bet.deadlineDate}
                 {urgency.label && (
@@ -276,9 +323,7 @@ function CompactBetCard({
               <Play className="w-3 h-3" />
             </button>
           )}
-          {isDelivered && (
-            <CheckCircle2 className="w-4 h-4 text-green-500" />
-          )}
+          {isDelivered && <CheckCircle2 className="w-4 h-4 text-green-500" />}
         </div>
       </div>
 
@@ -288,7 +333,9 @@ function CompactBetCard({
           <span className="text-[10px] text-text-secondary">
             {fmtMin(bet.elapsedSeconds / 60)} / {fmtMin(bet.timeChips)}
           </span>
-          <span className="text-[10px] text-text-secondary">{Math.round(progress)}%</span>
+          <span className="text-[10px] text-text-secondary">
+            {Math.round(progress)}%
+          </span>
         </div>
         <div className="h-[3px] rounded-full bg-border-primary overflow-hidden">
           <div

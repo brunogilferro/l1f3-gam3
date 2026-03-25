@@ -1,5 +1,5 @@
-import { createTuyau } from '@tuyau/core/client'
-import { registry } from 'backend/registry'
+import { createTuyau } from '@tuyau/core/client';
+import { registry } from 'backend/registry';
 
 export const tuyau = createTuyau({
   registry,
@@ -10,10 +10,10 @@ export const tuyau = createTuyau({
         const match =
           typeof document !== 'undefined'
             ? document.cookie.match(/(?:^| )auth_token=([^;]+)/)
-            : null
-        const token = match ? decodeURIComponent(match[1]) : null
-        if (token) request.headers.set('Authorization', `Bearer ${token}`)
+            : null;
+        const token = match ? decodeURIComponent(match[1]) : null;
+        if (token) request.headers.set('Authorization', `Bearer ${token}`);
       },
     ],
   },
-})
+});

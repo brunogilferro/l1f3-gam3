@@ -1,9 +1,9 @@
 'use client';
 
+import type { Hand, Table } from '@/types/game';
+import { ArrowRight, Calendar, Target } from 'lucide-react';
 import { motion } from 'motion/react';
 import Link from 'next/link';
-import { Target, ArrowRight, Calendar } from 'lucide-react';
-import type { Table, Hand } from '@/types/game';
 
 type TableWithMeta = Table & {
   projectId: string;
@@ -63,7 +63,9 @@ export function ActiveTablesSection({ tables = [] }: ActiveTablesSectionProps) {
     >
       <div className="flex items-center gap-2.5 mb-4">
         <Target className="w-4 h-4 text-accent-secondary" />
-        <h2 className="text-[12px] text-accent-secondary tracking-[2px]">MINHAS MESAS</h2>
+        <h2 className="text-[12px] text-accent-secondary tracking-[2px]">
+          MINHAS MESAS
+        </h2>
         <span className="w-5 h-5 rounded-full bg-accent-secondary/10 border border-accent-secondary/20 text-accent-secondary text-[10px] flex items-center justify-center">
           {tables.length}
         </span>
@@ -82,7 +84,9 @@ export function ActiveTablesSection({ tables = [] }: ActiveTablesSectionProps) {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-primary truncate">{table.name}</p>
+                  <p className="text-sm text-text-primary truncate">
+                    {table.name}
+                  </p>
                   <p className="text-[11px] text-text-secondary mt-0.5">
                     {table.projectName}
                   </p>
@@ -95,7 +99,8 @@ export function ActiveTablesSection({ tables = [] }: ActiveTablesSectionProps) {
                   <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-accent-secondary/10 border border-accent-secondary/20">
                     <Calendar className="w-3 h-3 text-accent-secondary" />
                     <span className="text-[11px] text-accent-secondary">
-                      Mão #{activeHand.number} · {PHASE_LABELS[activeHand.phase] ?? activeHand.phase}
+                      Mão #{activeHand.number} ·{' '}
+                      {PHASE_LABELS[activeHand.phase] ?? activeHand.phase}
                     </span>
                   </div>
                 </div>

@@ -1,0 +1,4 @@
+{
+  "extends": "@adonisjs/prettier-config",
+  "plugins": ["prettier-plugin-organize-imports"]
+}

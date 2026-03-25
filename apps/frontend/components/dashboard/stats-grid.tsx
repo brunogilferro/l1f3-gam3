@@ -1,7 +1,7 @@
 'use client';
 
+import { Calendar, Coins, FolderKanban, Target } from 'lucide-react';
 import { motion } from 'motion/react';
-import { FolderKanban, Target, Calendar, Coins } from 'lucide-react';
 
 interface StatCardProps {
   icon: React.ReactNode;
@@ -15,7 +15,9 @@ function StatCard({ icon, label, value, accentClass }: StatCardProps) {
     <div className="bg-bg-surface border border-border-primary rounded-xl p-4 flex items-center gap-4">
       <div>{icon}</div>
       <div>
-        <p className="text-[11px] text-text-secondary tracking-[2px]">{label}</p>
+        <p className="text-[11px] text-text-secondary tracking-[2px]">
+          {label}
+        </p>
         <p className={`text-[22px] font-medium ${accentClass}`}>{value}</p>
       </div>
     </div>

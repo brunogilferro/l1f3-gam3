@@ -1,4 +1,4 @@
-import { createTuyauReactQueryClient } from '@tuyau/react-query'
-import { tuyau } from './api'
+import { createTuyauReactQueryClient } from '@tuyau/react-query';
+import { tuyau } from './api';
 
-export const q = createTuyauReactQueryClient({ client: tuyau })
+export const q = createTuyauReactQueryClient({ client: tuyau });

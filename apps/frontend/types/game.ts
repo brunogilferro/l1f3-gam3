@@ -1,7 +1,11 @@
 // Core game types — mirrored from the database schema
 // TODO: replace mock types with API response types as routes are built
 
-export type DeliveryStatus = 'aprovada' | 'em_andamento' | 'pausada' | 'entregue';
+export type DeliveryStatus =
+  | 'aprovada'
+  | 'em_andamento'
+  | 'pausada'
+  | 'entregue';
 
 export type HandPhase =
   | 'aguardando'

@@ -1,16 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Coins, ChevronDown, ChevronUp } from 'lucide-react';
 import type { ApprovedBet, DeliveryStatus } from '@/types/game';
+import { ChevronDown, ChevronUp, Coins } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 import { BetCard } from './bet-card';
 
 type FilterTab = 'todas' | 'em_andamento' | 'aprovada' | 'pausada';
 
 const FILTER_TABS: { key: FilterTab; label: string; accentClass?: string }[] = [
   { key: 'todas', label: 'Todas' },
-  { key: 'em_andamento', label: 'Em andamento', accentClass: 'text-accent-secondary' },
+  {
+    key: 'em_andamento',
+    label: 'Em andamento',
+    accentClass: 'text-accent-secondary',
+  },
   { key: 'aprovada', label: 'Aprovadas', accentClass: 'text-accent-primary' },
   { key: 'pausada', label: 'Pausadas', accentClass: 'text-text-secondary' },
 ];
@@ -27,7 +31,9 @@ function sortByStatus(bets: ApprovedBet[]): ApprovedBet[] {
     aprovada: 2,
     entregue: 3,
   };
-  return [...bets].sort((a, b) => order[a.deliveryStatus] - order[b.deliveryStatus]);
+  return [...bets].sort(
+    (a, b) => order[a.deliveryStatus] - order[b.deliveryStatus]
+  );
 }
 
 export function BetsSection({ bets = [] }: BetsSectionProps) {
@@ -35,8 +41,12 @@ export function BetsSection({ bets = [] }: BetsSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   // Exclude delivered from main dashboard view
-  const activeBets = sortByStatus(bets.filter((b) => b.deliveryStatus !== 'entregue'));
-  const featuredBet = activeBets.find((b) => b.deliveryStatus === 'em_andamento');
+  const activeBets = sortByStatus(
+    bets.filter((b) => b.deliveryStatus !== 'entregue')
+  );
+  const featuredBet = activeBets.find(
+    (b) => b.deliveryStatus === 'em_andamento'
+  );
 
   const filteredBets = sortByStatus(
     filter === 'todas'
@@ -50,7 +60,8 @@ export function BetsSection({ bets = [] }: BetsSectionProps) {
 
   const counts: Record<FilterTab, number> = {
     todas: activeBets.length,
-    em_andamento: activeBets.filter((b) => b.deliveryStatus === 'em_andamento').length,
+    em_andamento: activeBets.filter((b) => b.deliveryStatus === 'em_andamento')
+      .length,
     aprovada: activeBets.filter((b) => b.deliveryStatus === 'aprovada').length,
     pausada: activeBets.filter((b) => b.deliveryStatus === 'pausada').length,
   };
@@ -100,7 +111,9 @@ export function BetsSection({ bets = [] }: BetsSectionProps) {
             {activeBets.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 gap-2 border border-dashed border-border-primary rounded-xl">
                 <Coins className="w-8 h-8 text-border-primary" />
-                <p className="text-sm text-text-secondary">Nenhuma aposta ativa</p>
+                <p className="text-sm text-text-secondary">
+                  Nenhuma aposta ativa
+                </p>
                 <p className="text-xs text-text-secondary opacity-50">
                   Suas apostas aprovadas aparecerão aqui
                 </p>
@@ -157,7 +170,8 @@ export function BetsSection({ bets = [] }: BetsSectionProps) {
                         queuePosition={queueMap.get(bet.id)}
                       />
                     ))}
-                  {filteredBets.filter((b) => b.id !== featuredBet?.id).length === 0 &&
+                  {filteredBets.filter((b) => b.id !== featuredBet?.id)
+                    .length === 0 &&
                     filter !== 'todas' && (
                       <p className="text-sm text-text-secondary text-center py-6">
                         Nenhuma aposta nesta categoria

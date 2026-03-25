@@ -1,12 +1,7 @@
 'use client';
 
 import type { LoggedUser } from '@/types/auth';
-import {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 function setCookie(name: string, value: string) {
   document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
